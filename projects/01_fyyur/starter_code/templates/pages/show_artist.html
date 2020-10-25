@@ -4,7 +4,9 @@
 <div class="row">
 	<div class="col-sm-6">
 		<h1 class="monospace">
-			{{ artist.name }}
+			{{ artist.name }} <input type="submit" class="btn btn-danger" id="deleteButton" data-id="{{ artist.id }}"
+				value="DELETE ARTIST">
+			<input type="submit" class="btn btn-primary" id="editButton" data-id="{{ artist.id }}" value="EDIT ARTIST">
 		</h1>
 		<p class="subtitle">
 			ID: {{ artist.id }}
@@ -19,13 +21,15 @@
 		</p>
 		<p>
 			<i class="fas fa-phone-alt"></i> {% if artist.phone %}{{ artist.phone }}{% else %}No Phone{% endif %}
-        </p>
-        <p>
-			<i class="fas fa-link"></i> {% if artist.website %}<a href="{{ artist.website }}" target="_blank">{{ artist.website }}</a>{% else %}No Website{% endif %}
 		</p>
 		<p>
-			<i class="fab fa-facebook-f"></i> {% if artist.facebook_link %}<a href="{{ artist.facebook_link }}" target="_blank">{{ artist.facebook_link }}</a>{% else %}No Facebook Link{% endif %}
-        </p>
+			<i class="fas fa-link"></i> {% if artist.website %}<a href="{{ artist.website }}"
+				target="_blank">{{ artist.website }}</a>{% else %}No Website{% endif %}
+		</p>
+		<p>
+			<i class="fab fa-facebook-f"></i> {% if artist.facebook_link %}<a href="{{ artist.facebook_link }}"
+				target="_blank">{{ artist.facebook_link }}</a>{% else %}No Facebook Link{% endif %}
+		</p>
 		{% if artist.seeking_venue %}
 		<div class="seeking">
 			<p class="lead">Currently seeking performance venues</p>
@@ -33,18 +37,22 @@
 				<i class="fas fa-quote-left"></i> {{ artist.seeking_description }} <i class="fas fa-quote-right"></i>
 			</div>
 		</div>
-		{% else %}	
+		{% else %}
 		<p class="not-seeking">
 			<i class="fas fa-moon"></i> Not currently seeking performance venues
 		</p>
 		{% endif %}
 	</div>
+	{% if artist.image_link %}
 	<div class="col-sm-6">
 		<img src="{{ artist.image_link }}" alt="Venue Image" />
 	</div>
+	{% endif %}
+
 </div>
 <section>
-	<h2 class="monospace">{{ artist.upcoming_shows_count }} Upcoming {% if artist.upcoming_shows_count == 1 %}Show{% else %}Shows{% endif %}</h2>
+	<h2 class="monospace">{{ artist.upcoming_shows_count }} Upcoming
+		{% if artist.upcoming_shows_count == 1 %}Show{% else %}Shows{% endif %}</h2>
 	<div class="row">
 		{%for show in artist.upcoming_shows %}
 		<div class="col-sm-4">
@@ -58,7 +66,8 @@
 	</div>
 </section>
 <section>
-	<h2 class="monospace">{{ artist.past_shows_count }} Past {% if artist.past_shows_count == 1 %}Show{% else %}Shows{% endif %}</h2>
+	<h2 class="monospace">{{ artist.past_shows_count }} Past
+		{% if artist.past_shows_count == 1 %}Show{% else %}Shows{% endif %}</h2>
 	<div class="row">
 		{%for show in artist.past_shows %}
 		<div class="col-sm-4">
@@ -72,5 +81,36 @@
 	</div>
 </section>
 
-{% endblock %}
+<script>
+	button = document.getElementById("deleteButton")
+	button.onclick = function (e) {
+		const artistID = e.target.dataset["id"];
+		fetch('/artist/' + artistID + '/delete', {
+			method: 'DELETE'
+		}).then(response => {
 
+			window.location.href = "http://localhost:5000/";
+		})
+			.catch(function (err) {
+				console.log(err)
+			})
+	}
+
+	button2 = document.getElementById("editButton")
+	button2.onclick = function (e) {
+		const artistID = e.target.dataset["id"];
+		fetch('/artists/' + artistID + '/edit', {
+			method: 'GET'
+		}).then(response => {
+			window.location.href = "http://localhost:5000/artists/" + artistID + "/edit";
+		})
+			.catch(function (err) {
+				console.log(err)
+			})
+	}
+
+
+
+</script>
+
+{% endblock %}
