@@ -48,18 +48,18 @@ class TriviaTestCase(unittest.TestCase):
        self.assertTrue(data["message"])
        self.assertTrue(data["error"])
     
-    # def test_delete_question(self):
-    #    """Test Successful Delete of questions """
-    #    res=self.client().delete('/questions/9')
-    #    question=Question.query.filter_by(id=9).one_or_none()
+    def test_delete_question(self):
+       """Test Successful Delete of questions """
+       res=self.client().delete('/questions/50')
+       question=Question.query.filter_by(id=50).one_or_none()
 
-    #    data= json.loads(res.data)
-    #    self.assertEqual(res.status_code,200)
-    #    self.assertEqual(data["success"],True)
-    #    self.assertTrue(data["total_questions"])
-    #    self.assertTrue(data["deleted"])
-    #    self.assertTrue(data["questions"])
-    #    self.assertEqual(question,None)
+       data= json.loads(res.data)
+       self.assertEqual(res.status_code,200)
+       self.assertEqual(data["success"],True)
+       self.assertTrue(data["total_questions"])
+       self.assertTrue(data["deleted"])
+       self.assertTrue(data["questions"])
+       self.assertEqual(question,None)
 
     def test_delete_question_400(self):
        """Test Failed Delete """
