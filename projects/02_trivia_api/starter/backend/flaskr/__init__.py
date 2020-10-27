@@ -203,4 +203,13 @@ def create_app(test_config=None):
             'error': 422,
             'Message': "unprocessable"
         }), 422
+
+    @app.errorhandler(500)
+    def server_error_500(error):
+        return ({
+            'success': False,
+            'error': 500,
+            'Message': "Internal Server Error"
+        }), 500
+
     return app

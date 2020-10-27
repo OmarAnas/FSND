@@ -69,8 +69,8 @@ class TriviaTestCase(unittest.TestCase):
 
     def test_delete_question(self):
         """Test Successful Delete of questions """
-        res = self.client().delete('/questions/51')
-        question = Question.query.filter_by(id=51).one_or_none()
+        res = self.client().delete('/questions/2')
+        question = Question.query.filter_by(id=2).one_or_none()
 
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
@@ -184,23 +184,15 @@ class TriviaTestCase(unittest.TestCase):
         self.assertTrue(data["question"])
         self.assertTrue(data["current_category"])
 
-    def test_play_quiz_Fail(self):
+    def test_play_quiz_404(self):
         """Test Play Quiz (Fail)"""
-        res = self.client().post(
-            '/quizzes',
-            json={
-                'quiz_category': {
-                    'id': '5',
-                    'type': 'Sports'},
-                'previous_questions': [
-                    11,
-                    10]})
+        res = self.client().post('/quizzes/444')
         data = json.loads(res.data)
 
-        self.assertEqual(res.status_code, 200)
-        self.assertEqual(data["success"], True)
-        self.assertEqual(data["question"], None)
-        self.assertTrue(data["current_category"])
+        self.assertEqual(res.status_code, 404)
+        self.assertEqual(data["success"], False)
+        self.assertTrue(data["message"])
+        self.assertTrue(data["error"])
 
 
 # Make the tests conveniently executable
