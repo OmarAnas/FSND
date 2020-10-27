@@ -20,156 +20,316 @@ The API can return four error types:
 - 422: Not Processable 
 
 ### Endpoints 
-#### GET /books
-#### POST /books
-#### DELETE /books/{book_id}
+- GET /categories
+- GET /questions
+- GET /categories/{category_id}/questions
+- POST /questions
+- POST /quizzes
+- DELETE /questions/{question_id}
 
-#### GET /books
+
+#### GET /categories
 - General:
-    - Returns a list of book objects, success value, and total number of books
-    - Results are paginated in groups of 8. Include a request argument to choose page number, starting from 1. 
-- Sample: `curl http://127.0.0.1:5000/books`
+    - Gets all categories from database ordered by their id. 
+    - Request Arguments: None
+    - Returns: json list of categories and their ids, success value, and total number of categories
+- Sample: `curl http://127.0.0.1:5000/categories`
 
 ``` {
-  "books": [
+  "categories": [
     {
-      "author": "Stephen King",
-      "id": 1,
-      "rating": 5,
-      "title": "The Outsider: A Novel"
-    },
+      "id": 0, 
+      "type": "Science"
+    }, 
     {
-      "author": "Lisa Halliday",
-      "id": 2,
-      "rating": 5,
-      "title": "Asymmetry: A Novel"
-    },
+      "id": 1, 
+      "type": "Art"
+    }, 
     {
-      "author": "Kristin Hannah",
-      "id": 3,
-      "rating": 5,
-      "title": "The Great Alone"
-    },
+      "id": 2, 
+      "type": "Geography"
+    }, 
     {
-      "author": "Tara Westover",
-      "id": 4,
-      "rating": 5,
-      "title": "Educated: A Memoir"
-    },
+      "id": 3, 
+      "type": "History"
+    }, 
     {
-      "author": "Jojo Moyes",
-      "id": 5,
-      "rating": 5,
-      "title": "Still Me: A Novel"
-    },
+      "id": 4, 
+      "type": "Entertainment"
+    }, 
     {
-      "author": "Leila Slimani",
-      "id": 6,
-      "rating": 5,
-      "title": "Lullaby"
-    },
-    {
-      "author": "Amitava Kumar",
-      "id": 7,
-      "rating": 5,
-      "title": "Immigrant, Montana"
-    },
-    {
-      "author": "Madeline Miller",
-      "id": 8,
-      "rating": 5,
-      "title": "CIRCE"
+      "id": 5, 
+      "type": "Sports"
     }
-  ],
-"success": true,
-"total_books": 18
+  ], 
+  "success": true, 
+  "total_categories": 6
 }
 ```
 
-#### POST /books
+#### GET /questions
 - General:
-    - Creates a new book using the submitted title, author and rating. Returns the id of the created book, success value, total books, and book list based on current page number to update the frontend. 
-- `curl http://127.0.0.1:5000/books?page=3 -X POST -H "Content-Type: application/json" -d '{"title":"Neverwhere", "author":"Neil Gaiman", "rating":"5"}'`
-```
-{
-  "books": [
+    - Gets all questions from database ordered by their id. 
+    - Results are paginated in groups of 10. 
+    - Request Arguments: None
+    - Returns: json list of questions, success value, all categories, and total number of questions
+- Sample: `curl http://127.0.0.1:5000/questions`
+
+``` 
+      {
+  "categories": [
+    "Science", 
+    "Art", 
+    "Geography", 
+    "History", 
+    "Entertainment", 
+    "Sports"
+  ], 
+  "questions": [
     {
-      "author": "Neil Gaiman",
-      "id": 24,
-      "rating": 5,
-      "title": "Neverwhere"
+      "answer": "Apollo 13", 
+      "category": 4, 
+      "difficulty": 4, 
+      "id": 2, 
+      "question": "What movie earned Tom Hanks his third straight Oscar nomination, in 1996?"
+    }, 
+    {
+      "answer": "Tom Cruise", 
+      "category": 4, 
+      "difficulty": 4, 
+      "id": 4, 
+      "question": "What actor did author Anne Rice first denounce, then praise in the role of her beloved Lestat?"
+    }, 
+    {
+      "answer": "Maya Angelou", 
+      "category": 3, 
+      "difficulty": 2, 
+      "id": 5, 
+      "question": "Whose autobiography is entitled 'I Know Why the Caged Bird Sings'?"
+    }, 
+    {
+      "answer": "Edward Scissorhands", 
+      "category": 4, 
+      "difficulty": 3, 
+      "id": 6, 
+      "question": "What was the title of the 1990 fantasy directed by Tim Burton about a young man with multi-bladed appendages?"
+    }, 
+    {
+      "answer": "Muhammad Ali", 
+      "category": 3, 
+      "difficulty": 1, 
+      "id": 9, 
+      "question": "What boxer's original name is Cassius Clay?"
+    }, 
+    {
+      "answer": "Brazil", 
+      "category": 5, 
+      "difficulty": 3, 
+      "id": 10, 
+      "question": "Which is the only team to play in every soccer World Cup tournament?"
+    }, 
+    {
+      "answer": "Uruguay", 
+      "category": 5, 
+      "difficulty": 4, 
+      "id": 11, 
+      "question": "Which country won the first ever soccer World Cup in 1930?"
+    }, 
+    {
+      "answer": "George Washington Carver", 
+      "category": 3, 
+      "difficulty": 2, 
+      "id": 12, 
+      "question": "Who invented Peanut Butter?"
+    }, 
+    {
+      "answer": "Lake Victoria", 
+      "category": 2, 
+      "difficulty": 2, 
+      "id": 13, 
+      "question": "What is the largest lake in Africa?"
+    }, 
+    {
+      "answer": "The Palace of Versailles", 
+      "category": 2, 
+      "difficulty": 3, 
+      "id": 14, 
+      "question": "In which royal palace would you find the Hall of Mirrors?"
     }
-  ],
-  "created": 24,
-  "success": true,
-  "total_books": 17
+  ], 
+  "success": true, 
+  "total_questions": 20
 }
 ```
-#### DELETE /books/{book_id}
+#### GET /categories/{category_id}/questions
 - General:
-    - Deletes the book of the given ID if it exists. Returns the id of the deleted book, success value, total books, and book list based on current page number to update the frontend. 
-- `curl -X DELETE http://127.0.0.1:5000/books/16?page=2`
+    - Gets all questions from a specific chosen category ordered by their id. 
+    - Request Arguments: category_id
+    - Returns: json list of questions, success value, current category, and total number of questions in that category
+- Sample: `curl http://127.0.0.1:5000/categories/1/questions`
+
+``` {
+  "current_category": 1, 
+  "questions": [
+    {
+      "answer": "Escher", 
+      "category": 1, 
+      "difficulty": 1, 
+      "id": 16, 
+      "question": "Which Dutch graphic artist\u2013initials M C was a creator of optical illusions?"
+    }, 
+    {
+      "answer": "Mona Lisa", 
+      "category": 1, 
+      "difficulty": 3, 
+      "id": 17, 
+      "question": "La Giaconda is better known as what?"
+    }, 
+    {
+      "answer": "Jackson Pollock", 
+      "category": 1, 
+      "difficulty": 2, 
+      "id": 19, 
+      "question": "Which American artist was a pioneer of Abstract Expressionism, and a leading exponent of action painting?"
+    }
+  ], 
+  "success": true, 
+  "total_questions": 3
+}
+```
+
+
+#### POST /questions
+- General:
+    - Creates a new question using the submitted question, answer, diffculty, and category.
+    - Request Arguments: None
+    - Returns the id of the created question, success value, total questions, and questions list.
+- `curl http://127.0.0.1:5000/questions?page=2 -X POST -H "Content-Type: application/json" -d '{"question":"How many soccer players should each team have on the field at the start of each match?", "answer":"11", "diffculty":"1", "category":"5"}'`
 ```
 {
-  "books": [
+  "questions": [
     {
-      "author": "Gina Apostol",
+      "answer": "11", 
+      "category": 5, 
+      "difficulty": 1, 
+      "id": 31, 
+      "question": "How many soccer players should each team have on the field at the start of each match?"
+    }, 
+  ],
+  "created": 31,
+  "success": true,
+  "total_questions": 21
+}
+```
+
+#### POST /quizzes
+- General:
+    - Retrieves category id and a list of previous questions id to create a randomized question in order to play the trivia game.
+    - Request Arguments: None
+    - Returns a question, success value, and current category.
+- `curl http://127.0.0.1:5000/quizzes -X POST -H "Content-Type: application/json" -d '{"quiz_category": {"id": "5","type": "Sports"},"previous_questions": []}'`
+```
+{
+  "question": [
+    {
+      "answer": "Brazil", 
+      "category": 5, 
+      "difficulty": 3, 
+      "id": 10, 
+      "question": "Which is the only team to play in every soccer World Cup tournament?"
+    }, 
+  ],
+  "success": true,
+  "current_category": 5
+}
+```
+
+#### DELETE /questions/{question_id}
+- General:
+    - Deletes the question of the given ID if it exists. 
+    - Request Arguments: question_id
+    - Returns: the id of the question, success value, total questions, and questions list.
+- `curl -X DELETE http://127.0.0.1:5000/questions/30`
+```
+{
+  "deleted": 30,
+  "questions": [
+    {
+      "answer": "Apollo 13",
+      "category": 4,
+      "difficulty": 4,
+      "id": 2,
+      "question": "What movie earned Tom Hanks his third straight Oscar nomination, in 1996?"
+    },
+    {
+      "answer": "Tom Cruise",
+      "category": 4,
+      "difficulty": 4,
+      "id": 4,
+      "question": "What actor did author Anne Rice first denounce, then praise in the role of her beloved Lestat?"
+    },
+    {
+      "answer": "Maya Angelou",
+      "category": 3,
+      "difficulty": 2,
+      "id": 5,
+      "question": "Whose autobiography is entitled 'I Know Why the Caged Bird Sings'?"
+    },
+    {
+      "answer": "Edward Scissorhands",
+      "category": 4,
+      "difficulty": 3,
+      "id": 6,
+      "question": "What was the title of the 1990 fantasy directed by Tim Burton about a young man with multi-bladed appendages?"
+    },
+    {
+      "answer": "Muhammad Ali",
+      "category": 3,
+      "difficulty": 1,
       "id": 9,
-      "rating": 5,
-      "title": "Insurrecto: A Novel"
+      "question": "What boxer's original name is Cassius Clay?"
     },
     {
-      "author": "Tayari Jones",
+      "answer": "Brazil",
+      "category": 5,
+      "difficulty": 3,
       "id": 10,
-      "rating": 5,
-      "title": "An American Marriage"
+      "question": "Which is the only team to play in every soccer World Cup tournament?"
     },
     {
-      "author": "Jordan B. Peterson",
+      "answer": "Uruguay",
+      "category": 5,
+      "difficulty": 4,
       "id": 11,
-      "rating": 5,
-      "title": "12 Rules for Life: An Antidote to Chaos"
+      "question": "Which country won the first ever soccer World Cup in 1930?"
     },
     {
-      "author": "Kiese Laymon",
+      "answer": "George Washington Carver",
+      "category": 3,
+      "difficulty": 2,
       "id": 12,
-      "rating": 1,
-      "title": "Heavy: An American Memoir"
+      "question": "Who invented Peanut Butter?"
     },
     {
-      "author": "Emily Giffin",
+      "answer": "Lake Victoria",
+      "category": 2,
+      "difficulty": 2,
       "id": 13,
-      "rating": 4,
-      "title": "All We Ever Wanted"
+      "question": "What is the largest lake in Africa?"
     },
     {
-      "author": "Jose Andres",
+      "answer": "The Palace of Versailles",
+      "category": 2,
+      "difficulty": 3,
       "id": 14,
-      "rating": 4,
-      "title": "We Fed an Island"
-    },
-    {
-      "author": "Rachel Kushner",
-      "id": 15,
-      "rating": 1,
-      "title": "The Mars Room"
+      "question": "In which royal palace would you find the Hall of Mirrors?"
     }
   ],
-  "deleted": 16,
   "success": true,
-  "total_books": 15
+  "total_questions": 20
 }
 ```
-#### PATCH /books/{book_id}
-- General:
-    - If provided, updates the rating of the specified book. Returns the success value and id of the modified book. 
-- `curl http://127.0.0.1:5000/books/15 -X PATCH -H "Content-Type: application/json" -d '{"rating":"1"}'`
-```
-{
-  "id": 15,
-  "success": true
-}
-```
+
 ## Testing
 To run the tests, run
 ```
