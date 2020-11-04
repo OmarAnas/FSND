@@ -23,6 +23,12 @@ class AuthError(Exception):
 # Auth Header
 
 
+'''
+get_token_auth_header() function checks if given token
+is a valid bearer token
+'''
+
+
 def get_token_auth_header():
 
     auth = request.headers.get('Authorization', None)
@@ -55,6 +61,13 @@ def get_token_auth_header():
     return token
 
 
+'''
+check_permissions() function takes permission and payload token
+checks if permissions exists in token
+checks if certain permission exists in permissions
+'''
+
+
 def check_permissions(permission, payload):
     if 'permissions' not in payload:
         raise AuthError({
@@ -69,6 +82,12 @@ def check_permissions(permission, payload):
         }, 401)
 
     return True
+
+
+'''
+verify_decode_jwt() checks if given token is valid jwt
+
+'''
 
 
 def verify_decode_jwt(token):
@@ -124,6 +143,13 @@ def verify_decode_jwt(token):
         'code': 'invalid_header',
                 'description': 'Unable to find the appropriate key.'
     }, 400)
+
+
+'''
+requires_auth() takes permission and passes it to
+all previous functions to make sure its valid
+
+'''
 
 
 def requires_auth(permission=''):

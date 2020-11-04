@@ -10,6 +10,11 @@ app = Flask(__name__)
 setup_db(app)
 CORS(app)
 
+'''
+after_request() Allows CORS in the application
+
+'''
+
 
 @app.after_request
 def after_request(response):
@@ -23,6 +28,16 @@ def after_request(response):
     return response
 
 # ROUTES
+
+
+'''
+GET /drinks endpoint
+privacy: public endpoint
+function: gets all drinks from database without their
+          details (title and recipe only)
+returns: status code 200 and json {"success": True, "drinks": drinks}
+         where drinks is the list of drinks or 404 code if not found
+'''
 
 
 @app.route('/drinks')
@@ -40,6 +55,15 @@ def get_drinks():
     })
 
 
+'''
+GET /drinks-detail endpoint
+privacy: only manager and barista
+function: gets all drinks from database with their details
+returns: status code 200 and json {"success": True, "drinks": drinks}
+         where drinks is the list of drinks or 404 code if not found
+'''
+
+
 @app.route('/drinks-detail')
 @requires_auth("get:drinks-detail")
 def get_details(payload):
@@ -54,6 +78,16 @@ def get_details(payload):
         "drinks": long_drinks,
         "status_code": 200
     })
+
+
+'''
+POST /drinks endpoint
+privacy: only manager
+function: creates new drink
+returns: status code 200 and json {"success": True, "drinks": drink}
+         where drink an array containing only
+         the newly created drink or 422 if unprocessable
+'''
 
 
 @app.route('/drinks', methods=["POST"])
@@ -80,6 +114,16 @@ def create_drink(payload):
         })
     except BaseException:
         abort(422)
+
+
+'''
+PATCH /drinks/drink_id endpoint
+privacy: only manager
+function: updates a drink and its details
+returns: status code 200 and json {"success": True, "drinks": drink}
+         where drink an array containing only the updated drink
+         or 422 if unprocessable
+'''
 
 
 @app.route('/drinks/<int:drink_id>', methods=["PATCH"])
@@ -112,6 +156,16 @@ def edit_drink(payload, drink_id):
         abort(422)
 
 
+'''
+DELETE /drinks/drink_id endpoint
+privacy: only manager
+function: Deletes a drink
+returns: status code 200 and json {"success": True, "delete": id}
+         where id is the id of the deleted record
+         or 404 if id is not found or 400 if bad request
+'''
+
+
 @app.route('/drinks/<int:drink_id>', methods=["DELETE"])
 @requires_auth("delete:drinks")
 def delete_drink(payload, drink_id):
@@ -134,6 +188,9 @@ def delete_drink(payload, drink_id):
 
 
 # Error Handling
+
+# Error handler for 422 unprocessable errors
+
 @app.errorhandler(422)
 def unprocessable(error):
     return jsonify({
@@ -141,6 +198,8 @@ def unprocessable(error):
         "error": 422,
         "message": "unprocessable"
     }), 422
+
+# Error handler for 404 not found
 
 
 @app.errorhandler(404)
@@ -151,6 +210,8 @@ def not_found_404(error):
         "error": 404
     }), 404
 
+# Error handler for 400 Bad request errors
+
 
 @app.errorhandler(400)
 def bad_request_400(error):
@@ -159,6 +220,8 @@ def bad_request_400(error):
         'error': 400,
         'message': "Bad Request"
     }), 400
+
+# Error handler for 405 not allowed errors
 
 
 @app.errorhandler(405)
@@ -169,6 +232,8 @@ def not_allowed(error):
         'message': "Method Not Allowed"
     }), 405
 
+# Error handler for 500 server error
+
 
 @app.errorhandler(500)
 def server_error_500(error):
@@ -177,6 +242,8 @@ def server_error_500(error):
         'error': 500,
         'Message': "Internal Server Error"
     }), 500
+
+# custom error handler authentication errors
 
 
 @app.errorhandler(AuthError)
